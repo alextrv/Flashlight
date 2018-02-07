@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="category_flashlight"
+        android:title="@string/pref_flashlight_category_string">
+        <SwitchPreference
+            android:key="prefTurnOnFlashlightOnStart"
+            android:title="@string/turn_on_on_start_string"
+            android:defaultValue="false"/>
+
+        <SwitchPreference
+            android:key="prefTurnOffFlashlightOnMinimize"
+            android:title="@string/turn_off_on_close_string"
+            android:defaultValue="false"/>
+
+        <SwitchPreference
+            android:key="prefPreventScreenFromSleeping"
+            android:title="@string/prevent_from_sleeping_string"
+            android:defaultValue="false"/>
+
+        <org.trv.alex.flashlight.SeekBarPreference
+            android:key="prefEnabledDurationFlashlight"
+            android:title="@string/duration_led_on_string"
+            android:defaultValue="1"
+            app:max="10"
+            app:value_pattern="@string/sec_pattern_string"/>
+
+        <org.trv.alex.flashlight.SeekBarPreference
+            android:key="prefDisabledDurationFlashlight"
+            android:title="@string/duration_led_off_string"
+            android:defaultValue="1"
+            app:max="10"
+            app:value_pattern="@string/sec_pattern_string"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="category_screen"
+        android:title="@string/pref_screen_category_string">
+
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:key="prefFirstColor"
+            android:defaultValue="@color/color1Default"
+            android:title="@string/pref_color_first_string"/>
+
+        <com.jaredrummler.android.colorpicker.ColorPreference
+            android:key="prefSecondColor"
+            android:defaultValue="@color/color2Default"
+            android:title="@string/pref_color_second_string"/>
+
+        <org.trv.alex.flashlight.SeekBarPreference
+            android:key="prefEnabledDurationScreen"
+            android:title="@string/duration_color_1_string"
+            android:defaultValue="0"
+            app:max="2000"
+            app:value_pattern="@string/ms_pattern_string"/>
+
+        <org.trv.alex.flashlight.SeekBarPreference
+            android:key="prefDisabledDurationScreen"
+            android:title="@string/duration_color_2_string"
+            android:defaultValue="0"
+            app:max="2000"
+            app:value_pattern="@string/ms_pattern_string"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

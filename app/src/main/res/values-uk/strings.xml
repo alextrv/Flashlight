@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name_string">Ліхтарик</string>
+    <string name="warning_string">Увага</string>
+    <string name="not_support_flashlight_string">Пристрій не підтримує спалах</string>
+    <string name="toggle_on_string">Увімкнути</string>
+    <string name="toggle_off_string">Вимкнути</string>
+    <string name="turn_on_on_start_string">Вмикати при старті</string>
+    <string name="turn_off_on_close_string">Вимикати при закритті</string>
+    <string name="tap_on_screen_to_exit_string">Натисніть на екран для виходу з цього режиму</string>
+    <string name="error_string">Сталася помилка. Можливо інший додаток використовує камеру</string>
+    <string name="settings_string">Опції</string>
+    <string name="prevent_from_sleeping_string">Заборонити перехід екрану в режим сну</string>
+    <string name="pref_flashlight_category_string">Ліхтарик</string>
+    <string name="pref_screen_category_string">Екран</string>
+    <string name="blink_string">Блимати</string>
+    <string name="pref_color_first_string">Колір блимання #1</string>
+    <string name="pref_color_second_string">Колір блимання #2</string>
+    <string name="ms_pattern_string">%1$d мс.</string>
+    <string name="sec_pattern_string">%1$d сек.</string>
+    <string name="duration_led_on_string">Тривалість увімкненого LED</string>
+    <string name="duration_led_off_string">Тривалість вимкненого LED</string>
+    <string name="duration_color_1_string">Тривалість кольору #1</string>
+    <string name="duration_color_2_string">Тривалість кольору #2</string>
+</resources>

@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+    defaultConfig {
+        applicationId "org.trv.alex.flashlight"
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "0.1"
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "api"
+    productFlavors {
+
+        minApi23 {
+            dimension "api"
+            versionNameSuffix "-api23"
+            minSdkVersion 23
+            versionCode 2000 + android.defaultConfig.versionCode
+            buildConfigField "boolean", "API23", "true"
+        }
+
+        minApi16 {
+            dimension "api"
+            versionNameSuffix "-api16"
+            minSdkVersion 16
+            targetSdkVersion 22
+            versionCode 1000 + android.defaultConfig.versionCode
+            buildConfigField "boolean", "API23", "false"
+        }
+
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:support-v13:27.0.2'
+
+    compile 'com.jaredrummler:colorpicker:1.0.2'
+}

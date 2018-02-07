@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name_string">Flashlight</string>
+    <string name="warning_string">Warning</string>
+    <string name="not_support_flashlight_string">Device does not support flashlight</string>
+    <string name="toggle_on_string">Turn on</string>
+    <string name="toggle_off_string">Turn off</string>
+    <string name="turn_on_on_start_string">Turn On on startup</string>
+    <string name="turn_off_on_close_string">Turn Off on close</string>
+    <string name="tap_on_screen_to_exit_string">Tap on the screen to exit from this mode</string>
+    <string name="error_string">Error occurred. Maybe another application is using camera</string>
+    <string name="settings_string">Settings</string>
+    <string name="prevent_from_sleeping_string">Prevent screen from sleeping</string>
+    <string name="pref_flashlight_category_string">Flashlight</string>
+    <string name="pref_screen_category_string">Screen</string>
+    <string name="blink_string">Blink</string>
+    <string name="pref_color_first_string">Blinking color #1</string>
+    <string name="pref_color_second_string">Blinking color #2</string>
+    <string name="duration_led_on_string">LED ON duration</string>
+    <string name="duration_led_off_string">LED OFF duration</string>
+    <string name="duration_color_1_string">Duration of color #1</string>
+    <string name="duration_color_2_string">Duration of color #2</string>
+
+    <string name="ms_pattern_string">%1$d ms.</string>
+    <string name="sec_pattern_string">%1$d sec.</string>
+</resources>

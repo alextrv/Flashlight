@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SeekBarPreference">
+        <attr name="max" format="integer"/>
+        <attr name="value_pattern" format="string|reference"/>
+        <attr name="default_value" format="integer"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name_string">Фонарик</string>
+    <string name="warning_string">Внимание</string>
+    <string name="not_support_flashlight_string">Устройство не поддерживает вспышку</string>
+    <string name="toggle_on_string">Включить</string>
+    <string name="toggle_off_string">Выключить</string>
+    <string name="turn_on_on_start_string">Включать при старте</string>
+    <string name="turn_off_on_close_string">Выключать при закрытии</string>
+    <string name="tap_on_screen_to_exit_string">Нажмите на экран для выхода из этого режима</string>
+    <string name="error_string">Произошла ошибка. Возможно другое приложение использует камеру</string>
+    <string name="settings_string">Настройки</string>
+    <string name="prevent_from_sleeping_string">Запретить переход экрана в спящий режим</string>
+    <string name="pref_flashlight_category_string">Фонарик</string>
+    <string name="pref_screen_category_string">Экран</string>
+    <string name="blink_string">Мерцать</string>
+    <string name="pref_color_first_string">Цвет мерцания #1</string>
+    <string name="pref_color_second_string">Цвет мерцания #2</string>
+    <string name="ms_pattern_string">%1$d мс.</string>
+    <string name="sec_pattern_string">%1$d сек.</string>
+    <string name="duration_led_on_string">Длительность включеного LED</string>
+    <string name="duration_led_off_string">Длительность выключеного LED</string>
+    <string name="duration_color_1_string">Длительность цвета #1</string>
+    <string name="duration_color_2_string">Длительность цвета #2</string>
+</resources>

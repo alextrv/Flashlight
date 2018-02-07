@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="org.trv.alex.flashlight.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:keepScreenOn="true"/>
+
+    <FrameLayout
+        android:id="@+id/content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/toggle_flashlight"
+            android:layout_gravity="center"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/button_off_state"/>
+
+        <Switch
+            android:id="@+id/switch_blinking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/blink_string"/>
+
+    </FrameLayout>
+
+</LinearLayout>
