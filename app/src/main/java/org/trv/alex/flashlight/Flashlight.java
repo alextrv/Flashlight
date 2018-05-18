@@ -5,10 +5,10 @@ import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -65,9 +65,11 @@ public class Flashlight {
         }
         if (BuildConfig.API23) {
             try {
-                String cameraId = mCameraManager.getCameraIdList()[0];
-                mCameraManager.setTorchMode(cameraId, true);
-                mTurnedOn = true;
+                String cameraId = getCameraIdWithFlashlight();
+                if (cameraId != null) {
+                    mCameraManager.setTorchMode(cameraId, true);
+                    mTurnedOn = true;
+                }
             } catch (CameraAccessException e) {
                 return false;
             }
@@ -108,8 +110,10 @@ public class Flashlight {
         }
         if (BuildConfig.API23) {
             try {
-                String cameraId = mCameraManager.getCameraIdList()[0];
-                mCameraManager.setTorchMode(cameraId, false);
+                String cameraId = getCameraIdWithFlashlight();
+                if (cameraId != null) {
+                    mCameraManager.setTorchMode(cameraId, false);
+                }
             } catch (CameraAccessException e) {
                 return false;
             } finally {
@@ -148,7 +152,10 @@ public class Flashlight {
                 @Override
                 public void run() {
                     try {
-                        final String cameraId = mCameraManager.getCameraIdList()[0];
+                        final String cameraId = getCameraIdWithFlashlight();
+                        if (cameraId == null) {
+                            return;
+                        }
                         for (int i = 0; mBlinkingStarted; ++i) {
                             if (i % 2 == 0) {
                                 mCameraManager.setTorchMode(cameraId, true);
@@ -232,6 +239,25 @@ public class Flashlight {
         if (BuildConfig.API23) {
             mCameraManager.unregisterTorchCallback(mTorchCallback);
         }
+    }
+
+    private String getCameraIdWithFlashlight() {
+        if (BuildConfig.API23) {
+            try {
+                String[] cameraIdArray = mCameraManager.getCameraIdList();
+                if (cameraIdArray.length > 0) {
+                    for (String cameraId : cameraIdArray) {
+                        if (mCameraManager.getCameraCharacteristics(cameraId)
+                                .get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
+                            return cameraId;
+                        }
+                    }
+                }
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 }
