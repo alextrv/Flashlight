@@ -1,6 +1,7 @@
 package org.trv.alex.flashlight;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 
@@ -17,6 +18,7 @@ public class AppPreferences {
     public static final String PREF_DISABLED_DURATION_SCREEN = "prefDisabledDurationScreen";
     public static final String PREF_FIRST_COLOR = "prefFirstColor";
     public static final String PREF_SECOND_COLOR = "prefSecondColor";
+    public static final String PREF_USE_BOTTOM_NAVIGATION_BAR = "prefUseBottomNavigationBar";
 
     public static void setPrefTurnOnFlashlightOnStart(Context context, boolean turnOn) {
         PreferenceManager.getDefaultSharedPreferences(context)
@@ -71,24 +73,7 @@ public class AppPreferences {
                 .apply();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*--------------------------------------------------------------------------------------------*/
-
 
     public static void setPrefEnabledDurationFlashlight(Context context, int duration) {
         PreferenceManager.getDefaultSharedPreferences(context)
@@ -114,10 +99,7 @@ public class AppPreferences {
                 .getInt(PREF_DISABLED_DURATION_FLASHLIGHT, 1);
     }
 
-
-
     /*--------------------------------------------------------------------------------------------*/
-
 
     public static void setPrefEnabledDurationScreen(Context context, int duration) {
         PreferenceManager.getDefaultSharedPreferences(context)
@@ -143,11 +125,7 @@ public class AppPreferences {
                 .getInt(PREF_DISABLED_DURATION_SCREEN, 1);
     }
 
-
-
     /*--------------------------------------------------------------------------------------------*/
-
-
 
     public static int getPrefFirstColor(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
@@ -159,14 +137,23 @@ public class AppPreferences {
                 .getInt(PREF_SECOND_COLOR, Color.BLACK);
     }
 
+    /*--------------------------------------------------------------------------------------------*/
 
+    public static void setPrefUseBottomNavigationBar(Context context, boolean useBottomNavBar) {
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PREF_USE_BOTTOM_NAVIGATION_BAR, useBottomNavBar)
+                .apply();
+    }
 
-
-
-
-
-
-
-
+    public static boolean getPrefUseBottomNavigationBar(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPreferences.contains(PREF_USE_BOTTOM_NAVIGATION_BAR)) {
+            return sharedPreferences.getBoolean(PREF_USE_BOTTOM_NAVIGATION_BAR, true);
+        } else {
+            setPrefUseBottomNavigationBar(context, true);
+            return true;
+        }
+    }
 
 }

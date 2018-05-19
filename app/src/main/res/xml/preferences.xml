@@ -67,4 +67,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="category_other"
+        android:title="@string/pref_other_category_string">
+
+        <SwitchPreference
+            android:key="prefUseBottomNavigationBar"
+            android:title="@string/use_bottom_navigation_bar_string"
+            android:defaultValue="true"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

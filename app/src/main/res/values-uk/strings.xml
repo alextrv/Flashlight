@@ -21,4 +21,6 @@
     <string name="duration_led_off_string">Тривалість вимкненого LED</string>
     <string name="duration_color_1_string">Тривалість кольору #1</string>
     <string name="duration_color_2_string">Тривалість кольору #2</string>
+    <string name="pref_other_category_string">Інше</string>
+    <string name="use_bottom_navigation_bar_string">Навігаційна панель знизу</string>
 </resources>

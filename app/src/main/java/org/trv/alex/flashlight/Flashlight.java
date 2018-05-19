@@ -14,6 +14,8 @@ import java.io.IOException;
 
 public class Flashlight {
 
+    private static Flashlight sFlashlight;
+
     private boolean mTurnedOn = false;
     private boolean mBlinkingStarted;
     private Context mContext;
@@ -31,7 +33,14 @@ public class Flashlight {
         void onStateChanged();
     }
 
-    public Flashlight(Context context) {
+    public static Flashlight getInstance(Context context) {
+        if (sFlashlight == null) {
+            sFlashlight = new Flashlight(context);
+        }
+        return sFlashlight;
+    }
+
+    private Flashlight(Context context) {
         mContext = context;
         if (BuildConfig.FLAVOR.equals("minApi23")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -253,8 +262,8 @@ public class Flashlight {
                         }
                     }
                 }
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
             }
         }
         return null;

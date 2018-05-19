@@ -9,8 +9,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +23,8 @@ public class MainFragment extends Fragment implements SharedPreferences.OnShared
     private static final int TURN_OFF = 2;
     private static final int START_BLINKING = 3;
 
+    public static final String TAG = "MainFragment";
+
     private ImageButton mToggleButton;
     private Switch mSwitchBlinking;
     private Flashlight mFlashlight;
@@ -36,7 +36,7 @@ public class MainFragment extends Fragment implements SharedPreferences.OnShared
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFlashlight = new Flashlight(getActivity());
+        mFlashlight = Flashlight.getInstance(getActivity().getApplicationContext());
 
         // Works only for API 23+
         mFlashlight.registerStateChanged(new Flashlight.StateChanged() {
@@ -92,15 +92,6 @@ public class MainFragment extends Fragment implements SharedPreferences.OnShared
                 });
             }
         };
-
-        if (!mFlashlight.isAvailable()) {
-            new AlertDialog.Builder(getActivity())
-                    .setCancelable(false)
-                    .setTitle(R.string.warning_string)
-                    .setMessage(R.string.not_support_flashlight_string)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .create().show();
-        }
 
         if (AppPreferences.getPrefTurnOnFlashlightOnStart(getActivity())) {
             mFlashlightHandler.sendEmptyMessage(TURN_ON);
@@ -179,15 +170,15 @@ public class MainFragment extends Fragment implements SharedPreferences.OnShared
 
     private void setKeepScreenOn() {
         boolean preventFromSleeping = AppPreferences.getPrefPreventScreenFromSleeping(getActivity().getApplicationContext());
-        TabLayout tabLayout = ((MainActivity) getActivity()).getTabLayout();
+        View barView = ((MainActivity) getActivity()).getBarLayout();
         if (preventFromSleeping) {
             if (mFlashlight.isTurnedOn()) {
-                tabLayout.setKeepScreenOn(true);
+                barView.setKeepScreenOn(true);
             } else {
-                tabLayout.setKeepScreenOn(false);
+                barView.setKeepScreenOn(false);
             }
         } else {
-            tabLayout.setKeepScreenOn(false);
+            barView.setKeepScreenOn(false);
         }
     }
 

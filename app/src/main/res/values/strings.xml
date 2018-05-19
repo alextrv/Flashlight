@@ -19,7 +19,8 @@
     <string name="duration_led_off_string">LED OFF duration</string>
     <string name="duration_color_1_string">Duration of color #1</string>
     <string name="duration_color_2_string">Duration of color #2</string>
-
+    <string name="pref_other_category_string">Other</string>
+    <string name="use_bottom_navigation_bar_string">Use bottom Navigation Bar</string>
     <string name="ms_pattern_string">%1$d ms.</string>
     <string name="sec_pattern_string">%1$d sec.</string>
 </resources>

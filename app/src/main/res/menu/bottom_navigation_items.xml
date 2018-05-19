@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_flashlight"
+        android:icon="@drawable/ic_flashlight_24dp"
+        android:title="@string/pref_flashlight_category_string"/>
+
+    <item
+        android:id="@+id/nav_screen"
+        android:icon="@drawable/ic_screen_24dp"
+        android:title="@string/pref_screen_category_string"/>
+
+    <item
+        android:id="@+id/nav_preferences"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/settings_string"/>
+
+</menu>

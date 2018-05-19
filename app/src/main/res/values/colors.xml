@@ -6,6 +6,7 @@
 
     <color name="tabTextColor">#fff</color>
     <color name="tabSelectedTextColor">#fff</color>
+    <color name="tabUnselectedTextColor">#bbb</color>
 
     <color name="color1Default">#fff</color>
     <color name="color2Default">#000</color>

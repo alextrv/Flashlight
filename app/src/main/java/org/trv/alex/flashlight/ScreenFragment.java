@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -20,6 +19,8 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
     private static final float MAX_BRIGHTNESS = 1F;
 
     private static final float DEFAULT_BRIGHTNESS = -1F;
+
+    public static final String TAG = "ScreenFragment";
 
     private ImageButton mToggleButton;
     private LinearLayout mEmptyLayout;
@@ -119,12 +120,12 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
         if (uiOptions == View.SYSTEM_UI_FLAG_VISIBLE) {
             mContentLayout.setVisibility(View.VISIBLE);
             mEmptyLayout.setVisibility(View.GONE);
-            activity.getTabLayout().setVisibility(View.VISIBLE);
+            activity.getBarLayout().setVisibility(View.VISIBLE);
             setBrightness(DEFAULT_BRIGHTNESS);
         } else {
             mEmptyLayout.setVisibility(View.VISIBLE);
             mContentLayout.setVisibility(View.GONE);
-            activity.getTabLayout().setVisibility(View.GONE);
+            activity.getBarLayout().setVisibility(View.GONE);
             setBrightness(MAX_BRIGHTNESS);
         }
     }
