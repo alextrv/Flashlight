@@ -32,6 +32,8 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
 
     private Thread mBlinkingThread;
 
+    private View mDecorView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +42,9 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
             ((MainActivity) getActivity()).setOnBackPressedListener(this);
         }
 
-        View decorView = getActivity().getWindow().getDecorView();
+        mDecorView = getActivity().getWindow().getDecorView();
 
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+        mDecorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
             @Override
             public void onSystemUiVisibilityChange(int visibility) {
                 if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
@@ -115,8 +117,7 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
             uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
         }
         MainActivity activity = (MainActivity) getActivity();
-        View decorView = activity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(uiOptions);
+        mDecorView.setSystemUiVisibility(uiOptions);
         if (uiOptions == View.SYSTEM_UI_FLAG_VISIBLE) {
             mContentLayout.setVisibility(View.VISIBLE);
             mEmptyLayout.setVisibility(View.GONE);
@@ -186,6 +187,12 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
             mBlinkingThread.interrupt();
             mBlinkingThread = null;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDecorView.setOnSystemUiVisibilityChangeListener(null);
     }
 
     @Override
