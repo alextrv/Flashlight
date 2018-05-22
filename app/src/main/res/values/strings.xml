@@ -7,7 +7,7 @@
     <string name="turn_on_on_start_string">Turn On on startup</string>
     <string name="turn_off_on_close_string">Turn Off on close</string>
     <string name="tap_on_screen_to_exit_string">Tap on the screen to exit from this mode</string>
-    <string name="error_string">Error occurred. Maybe another application is using camera</string>
+    <string name="error_string">Error occurred. Maybe another application is using the camera</string>
     <string name="settings_string">Settings</string>
     <string name="prevent_from_sleeping_string">Prevent screen from sleeping</string>
     <string name="pref_flashlight_category_string">Flashlight</string>
@@ -23,4 +23,5 @@
     <string name="use_bottom_navigation_bar_string">Use bottom Navigation Bar</string>
     <string name="ms_pattern_string">%1$d ms.</string>
     <string name="sec_pattern_string">%1$d sec.</string>
+    <string name="app_version_string">App version</string>
 </resources>

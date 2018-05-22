@@ -147,7 +147,7 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
         mBlinkingThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; ; ++i) {
+                for (int i = 0; !Thread.interrupted(); ++i) {
                     if (i % 2 == 0) {
                         mEmptyLayout.post(new Runnable() {
                             @Override
@@ -189,18 +189,28 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mDecorView.setOnSystemUiVisibilityChangeListener(null);
-    }
-
-    @Override
-    public void onPressedBack() {
+    private void exitFullScreenState() {
         if (mFullScreenEnabled) {
             setFullScreenState(false);
             setBrightness(DEFAULT_BRIGHTNESS);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        exitFullScreenState();
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        mDecorView.setOnSystemUiVisibilityChangeListener(null);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPressedBack() {
+        exitFullScreenState();
     }
 
     @Override

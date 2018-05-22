@@ -12,6 +12,9 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    applicationVariants.all {
+        variant -> variant.resValue "string", "versionName", variant.versionName
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -20,7 +23,6 @@ android {
     }
     flavorDimensions "api"
     productFlavors {
-
         minApi23 {
             dimension "api"
             versionNameSuffix "-api23"

@@ -76,6 +76,11 @@
             android:title="@string/use_bottom_navigation_bar_string"
             android:defaultValue="true"/>
 
+        <Preference
+            android:title="@string/app_version_string"
+            android:summary="@string/versionName"
+            android:selectable="false"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
