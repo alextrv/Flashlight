@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public View getBarLayout() {
-        return AppPreferences.getPrefUseBottomNavigationBar(this) ? mBottomNavigationView : mTabLayout;
+        return mBottomNavigationView != null ? mBottomNavigationView : mTabLayout;
     }
 
     public Handler getFlashlightHandler() {
