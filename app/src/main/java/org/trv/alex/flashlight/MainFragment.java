@@ -27,9 +27,31 @@ public class MainFragment extends Fragment implements MainActivity.FlashlightCal
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFlashlight = Flashlight.getInstance(getActivity().getApplicationContext());
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        mToggleButton = view.findViewById(R.id.toggle_flashlight);
+        mToggleButton.setEnabled(mFlashlight.isAvailable());
+
+        boolean enableBlinking = AppPreferences.getPrefEnableFlashlightBlinking(getActivity());
+
+        mSwitchBlinking = view.findViewById(R.id.switch_blinking);
+        mSwitchBlinking.setChecked(enableBlinking);
+
+        return view;
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         mActivity = (MainActivity) getActivity();
-
         mActivity.setFlashlightCallbacks(this);
 
         mFlashlightHandler = mActivity.getFlashlightHandler();
@@ -44,22 +66,6 @@ public class MainFragment extends Fragment implements MainActivity.FlashlightCal
                 }
             }
         });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-
-        mToggleButton = view.findViewById(R.id.toggle_flashlight);
-
-        mToggleButton.setEnabled(mFlashlight.isAvailable());
-
-        boolean enableBlinking = AppPreferences.getPrefEnableFlashlightBlinking(getActivity());
-
-        mSwitchBlinking = view.findViewById(R.id.switch_blinking);
-        mSwitchBlinking.setChecked(enableBlinking);
 
         mToggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +89,6 @@ public class MainFragment extends Fragment implements MainActivity.FlashlightCal
                 }
             }
         });
-
-        return view;
-
     }
 
     @Override
