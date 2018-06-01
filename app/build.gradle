@@ -7,8 +7,8 @@ android {
         applicationId "org.trv.alex.flashlight"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 4
-        versionName "0.3"
+        versionCode 5
+        versionName "0.3.1"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
