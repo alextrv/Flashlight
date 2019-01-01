@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "org.trv.alex.flashlight"
         minSdkVersion 16
@@ -21,7 +21,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            applicationIdSuffix ".debug"
+//            applicationIdSuffix ".debug"
         }
     }
     flavorDimensions "api"
@@ -38,7 +38,6 @@ android {
             dimension "api"
             versionNameSuffix "-api16"
             minSdkVersion 16
-            targetSdkVersion 22
             versionCode 1000 + android.defaultConfig.versionCode
             buildConfigField "boolean", "API23", "false"
         }
