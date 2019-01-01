@@ -14,6 +14,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ScreenFragment extends Fragment implements MainActivity.OnBackPressedListener {
 
     private static final float MAX_BRIGHTNESS = 1F;
@@ -28,9 +31,9 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
     private Switch mSwitchBlinking;
 
     private boolean mFullScreenEnabled;
-    private boolean isScreenBlinking;
+    private volatile boolean isScreenBlinking;
 
-    private Thread mBlinkingThread;
+    private static ExecutorService mBlinkingExecutor = Executors.newSingleThreadExecutor();
 
     private View mDecorView;
 
@@ -141,13 +144,19 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
 
         isScreenBlinking = true;
 
-        final int sleepOnMs = onMs > 10 ? onMs : 10;
-        final int sleepOffMs = offMs > 10 ? offMs : 10;
+        final int minSleep = 10;
 
-        mBlinkingThread = new Thread(new Runnable() {
+        final int sleepOnMs = Math.max(minSleep, onMs);
+        final int sleepOffMs = Math.max(minSleep, offMs);
+
+        if (mBlinkingExecutor.isTerminated()) {
+            mBlinkingExecutor = Executors.newSingleThreadExecutor();
+        }
+
+        mBlinkingExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; !Thread.interrupted(); ++i) {
+                for (int i = 0; isScreenBlinking && !Thread.currentThread().isInterrupted(); ++i) {
                     if (i % 2 == 0) {
                         mEmptyLayout.post(new Runnable() {
                             @Override
@@ -178,15 +187,10 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
                 }
             }
         });
-        mBlinkingThread.start();
     }
 
     public void stopBlinking() {
-        if (mBlinkingThread != null) {
-            isScreenBlinking = false;
-            mBlinkingThread.interrupt();
-            mBlinkingThread = null;
-        }
+        isScreenBlinking = false;
     }
 
     private void exitFullScreenState() {
@@ -205,6 +209,9 @@ public class ScreenFragment extends Fragment implements MainActivity.OnBackPress
     @Override
     public void onDestroy() {
         mDecorView.setOnSystemUiVisibilityChangeListener(null);
+        if (!mBlinkingExecutor.isShutdown()) {
+            mBlinkingExecutor.shutdownNow();
+        }
         super.onDestroy();
     }
 

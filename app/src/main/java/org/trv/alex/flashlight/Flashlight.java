@@ -10,16 +10,22 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
+import java.io.Closeable;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class Flashlight {
+public class Flashlight implements Closeable {
 
     private static Flashlight sFlashlight;
 
     private boolean mTurnedOn = false;
-    private boolean mBlinkingStarted;
+    private volatile boolean mBlinking;
     private Context mContext;
-    private Thread mBlinkingThread;
+    private static ExecutorService mBlinkingExecutor = Executors.newSingleThreadExecutor();
+    private static Future<?> mBlinkingResult;
 
     // For SDK before 23
     private Camera mCamera;
@@ -29,13 +35,25 @@ public class Flashlight {
     private StateChanged mStateChanged;
     private CameraManager.TorchCallback mTorchCallback;
 
+    @Override
+    public void close() {
+        if (isTurnedOn()) {
+            turnOff();
+        }
+        if (!mBlinkingExecutor.isShutdown()) {
+            mBlinkingExecutor.shutdownNow();
+        }
+    }
+
     public interface StateChanged {
         void onStateChanged();
     }
 
     public static Flashlight getInstance(Context context) {
         if (sFlashlight == null) {
-            sFlashlight = new Flashlight(context);
+            sFlashlight = new Flashlight(context.getApplicationContext());
+        } else {
+            sFlashlight.mContext = context.getApplicationContext();
         }
         return sFlashlight;
     }
@@ -49,7 +67,7 @@ public class Flashlight {
                     @Override
                     public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
                         super.onTorchModeChanged(cameraId, enabled);
-                        if (mBlinkingStarted) {
+                        if (mBlinking) {
                             mTurnedOn = true;
                         } else {
                             mTurnedOn = enabled;
@@ -69,7 +87,7 @@ public class Flashlight {
         if (!isAvailable()) {
             return false;
         }
-        if (mBlinkingStarted) {
+        if (isBlinking()) {
             turnOff();
         }
         if (BuildConfig.API23) {
@@ -107,15 +125,13 @@ public class Flashlight {
         if (!isAvailable()) {
             return false;
         }
-        mBlinkingStarted = false;
-        if (mBlinkingThread != null) {
-            try {
-                mBlinkingThread.interrupt();
-                mBlinkingThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        mBlinking = false;
+        try {
+            if (mBlinkingResult != null) {
+                mBlinkingResult.get();
             }
-            mBlinkingThread = null;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
         if (BuildConfig.API23) {
             try {
@@ -147,65 +163,44 @@ public class Flashlight {
         return true;
     }
 
-    public void startBlinking(final long lightOnMs, final long lightOffMs) {
+    public void blink(final long lightOnMs, final long lightOffMs) {
         if (!isAvailable()) {
             return;
         }
         if (mTurnedOn) {
             turnOff();
         }
-        mBlinkingStarted = true;
         mTurnedOn = true;
-        if (BuildConfig.API23) {
-            mBlinkingThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        final String cameraId = getCameraIdWithFlashlight();
-                        if (cameraId == null) {
-                            return;
-                        }
-                        for (int i = 0; mBlinkingStarted; ++i) {
-                            if (i % 2 == 0) {
-                                mCameraManager.setTorchMode(cameraId, true);
-                                try {
-                                    Thread.sleep(lightOnMs);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                    return;
-                                }
-                            } else {
-                                mCameraManager.setTorchMode(cameraId, false);
-                                try {
-                                    Thread.sleep(lightOffMs);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                    return;
-                                }
-                            }
-                        }
-                    } catch (CameraAccessException e) {
-                        // ignore this exception
+        if (mBlinkingExecutor.isTerminated()) {
+            mBlinkingExecutor = Executors.newSingleThreadExecutor();
+        }
+        mBlinkingResult = mBlinkingExecutor.submit(new Blinking(lightOnMs, lightOffMs));
+    }
+
+    private class Blinking implements Runnable {
+
+        private static final long MIN_DURATION = 100;
+
+        private long lightOnMs;
+        private long lightOffMs;
+
+        public Blinking(long lightOnMs, long lightOffMs) {
+            this.lightOnMs = Math.max(MIN_DURATION, lightOnMs);
+            this.lightOffMs = Math.max(MIN_DURATION, lightOffMs);
+        }
+
+        @Override
+        public void run() {
+            mBlinking = true;
+            if (BuildConfig.API23) {
+                try {
+                    final String cameraId = getCameraIdWithFlashlight();
+                    if (cameraId == null) {
+                        return;
                     }
-                }
-            });
-        } else {
-            mBlinkingThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mCamera = Camera.open();
-                    final Camera.Parameters params = mCamera.getParameters();
-                    SurfaceTexture surfaceTexture = new SurfaceTexture(0);
-                    try {
-                        mCamera.setPreviewTexture(surfaceTexture);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    mCamera.startPreview();
-                    for (int i = 0; mBlinkingStarted; ++i) {
+                    for (int i = 0; mBlinking && !Thread.currentThread().isInterrupted(); ++i) {
                         if (i % 2 == 0) {
-                            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                            mCamera.setParameters(params);
+                            mCameraManager.setTorchMode(cameraId, true);
                             try {
                                 Thread.sleep(lightOnMs);
                             } catch (InterruptedException e) {
@@ -213,8 +208,7 @@ public class Flashlight {
                                 return;
                             }
                         } else {
-                            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                            mCamera.setParameters(params);
+                            mCameraManager.setTorchMode(cameraId, false);
                             try {
                                 Thread.sleep(lightOffMs);
                             } catch (InterruptedException e) {
@@ -223,14 +217,50 @@ public class Flashlight {
                             }
                         }
                     }
+                } catch (CameraAccessException e) {
+                    // ignore this exception
                 }
-            });
+            } else {
+                mCamera = Camera.open();
+                final Camera.Parameters params = mCamera.getParameters();
+                SurfaceTexture surfaceTexture = new SurfaceTexture(0);
+                try {
+                    mCamera.setPreviewTexture(surfaceTexture);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mCamera.startPreview();
+                for (int i = 0; mBlinking && !Thread.currentThread().isInterrupted(); ++i) {
+                    if (i % 2 == 0) {
+                        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        mCamera.setParameters(params);
+                        try {
+                            Thread.sleep(lightOnMs);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                    } else {
+                        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        mCamera.setParameters(params);
+                        try {
+                            Thread.sleep(lightOffMs);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                    }
+                }
+            }
+            mBlinking = false;
         }
-        mBlinkingThread.start();
-    }
 
-    public boolean isBlinkingStarted() {
-        return mBlinkingStarted;
+
+    }
+    
+
+    public boolean isBlinking() {
+        return mBlinkingResult != null && !mBlinkingResult.isDone();
     }
 
     public boolean isTurnedOn() {
@@ -256,8 +286,9 @@ public class Flashlight {
                 String[] cameraIdArray = mCameraManager.getCameraIdList();
                 if (cameraIdArray.length > 0) {
                     for (String cameraId : cameraIdArray) {
-                        if (mCameraManager.getCameraCharacteristics(cameraId)
-                                .get(CameraCharacteristics.FLASH_INFO_AVAILABLE)) {
+                        Boolean flashAvailable = mCameraManager.getCameraCharacteristics(cameraId)
+                                .get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                        if (flashAvailable != null && flashAvailable) {
                             return cameraId;
                         }
                     }

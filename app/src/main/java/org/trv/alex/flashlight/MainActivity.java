@@ -4,11 +4,13 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Process;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     private FlashlightCallbacks mFlashlightCallbacks;
 
-    private HandlerThread mFlashlightHanderThread;
+    private HandlerThread mFlashlightHandlerThread;
     private Handler mFlashlightHandler;
     private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
@@ -99,10 +101,10 @@ public class MainActivity extends AppCompatActivity
                     .create().show();
         }
 
-        mFlashlightHanderThread = new HandlerThread("Flashlight");
-        mFlashlightHanderThread.start();
+        mFlashlightHandlerThread = new HandlerThread("Flashlight", Process.THREAD_PRIORITY_BACKGROUND);
+        mFlashlightHandlerThread.start();
 
-        mFlashlightHandler = new Handler(mFlashlightHanderThread.getLooper()) {
+        mFlashlightHandler = new Handler(mFlashlightHandlerThread.getLooper()) {
             @Override
             public void handleMessage(final Message msg) {
                 mMainHandler.post(new Runnable() {
@@ -124,7 +126,7 @@ public class MainActivity extends AppCompatActivity
                     case START_BLINKING:
                         int onMs = AppPreferences.getPrefEnabledDurationFlashlight(getApplicationContext()) * 1000;
                         int offMs = AppPreferences.getPrefDisabledDurationFlashlight(getApplicationContext()) * 1000;
-                        mFlashlight.startBlinking(onMs, offMs);
+                        mFlashlight.blink(onMs, offMs);
                         ok = true;
                         break;
                     default:
@@ -221,6 +223,12 @@ public class MainActivity extends AppCompatActivity
                 && !mIsRestarting) {
             mFlashlightHandler.sendEmptyMessage(MainActivity.TURN_OFF);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mFlashlightHandlerThread.quitSafely();
+        } else {
+            mFlashlightHandlerThread.quit();
+        }
+        mFlashlight.close();
         super.onDestroy();
     }
 

@@ -15,8 +15,8 @@
     <string name="blink_string">Блимати</string>
     <string name="pref_color_first_string">Колір блимання #1</string>
     <string name="pref_color_second_string">Колір блимання #2</string>
-    <string name="ms_pattern_string">%1$d мс.</string>
-    <string name="sec_pattern_string">%1$d сек.</string>
+    <string name="ms_pattern_string">%1$s мс.</string>
+    <string name="sec_pattern_string">%1$s сек.</string>
     <string name="duration_led_on_string">Тривалість увімкненого LED</string>
     <string name="duration_led_off_string">Тривалість вимкненого LED</string>
     <string name="duration_color_1_string">Тривалість кольору #1</string>

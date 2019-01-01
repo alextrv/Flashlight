@@ -20,7 +20,7 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     private TextView mSummaryTextView;
 
     private int mProgress;
-    private int mMax = 100;
+    private int mMax;
     private String mValuePattern;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
@@ -97,10 +97,11 @@ public class SeekBarPreference extends Preference implements SeekBar.OnSeekBarCh
     }
 
     private String getFormattedString(int progress) {
+        String progressStr = progress == 0 ? "<1" : String.valueOf(progress);
         if (mValuePattern == null) {
-            return String.valueOf(progress);
+            return progressStr;
         } else {
-            return String.format(mValuePattern, progress);
+            return String.format(mValuePattern, progressStr);
         }
     }
 

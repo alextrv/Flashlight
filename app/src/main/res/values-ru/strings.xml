@@ -15,8 +15,8 @@
     <string name="blink_string">Мерцать</string>
     <string name="pref_color_first_string">Цвет мерцания #1</string>
     <string name="pref_color_second_string">Цвет мерцания #2</string>
-    <string name="ms_pattern_string">%1$d мс.</string>
-    <string name="sec_pattern_string">%1$d сек.</string>
+    <string name="ms_pattern_string">%1$s мс.</string>
+    <string name="sec_pattern_string">%1$s сек.</string>
     <string name="duration_led_on_string">Длительность включеного LED</string>
     <string name="duration_led_off_string">Длительность выключеного LED</string>
     <string name="duration_color_1_string">Длительность цвета #1</string>
